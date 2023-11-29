@@ -25,8 +25,6 @@ function App() {
 }
 
 function Accordion({ data }) {
-  const [curOpen, setCurOpen] = useState(null);
-
   return (
     <div className='accordion'>
       {data.map((faq, i) => (
@@ -34,31 +32,28 @@ function Accordion({ data }) {
           key={faq.title}
           num={i}
           title={faq.title}
-          curOpen={curOpen}
-          onCurOpen={setCurOpen}
-        >
-          {faq.text}
-        </AccordionItem>
+          text={faq.text}
+        />
       ))}
     </div>
   );
 }
 
-function AccordionItem({ num, title, curOpen, onCurOpen, children }) {
-  const isOpen = curOpen === num;
+function AccordionItem({ num, title, text }) {
+  const [appearence, setAppearence] = useState(false);
 
-  function handdleCurOpen(id) {
-    onCurOpen(isOpen ? null : id);
+  function handdleToggle() {
+    setAppearence((appearence) => !appearence);
   }
 
   return (
-    <div className={`item ${isOpen ? 'open' : ''}`}>
+    <div className={`item ${appearence ? 'open' : ''}`}>
       <p className='number'>{num < 9 ? `0${num + 1}` : num + 1}</p>
       <p className='title'>{title}</p>
-      <p className='icon' onClick={() => handdleCurOpen(num)}>
-        {isOpen ? '-' : '+'}
+      <p className='icon' onClick={handdleToggle}>
+        {appearence ? '-' : '+'}
       </p>
-      {num === curOpen && <div className='content-box'>{children}</div>}
+      {appearence ? <div className='content-box'>{text}</div> : null}
     </div>
   );
 }
